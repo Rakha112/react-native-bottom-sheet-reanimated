@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyleSheet,
   View,
@@ -30,7 +31,7 @@ const BottomSheet = forwardRef(
         damping: 100,
         stiffness: 400,
       });
-    }, [newActiveHeight, topAnimation]);
+    }, []);
 
     const close = useCallback(() => {
       'worklet';
@@ -38,7 +39,7 @@ const BottomSheet = forwardRef(
         damping: 100,
         stiffness: 400,
       });
-    }, [height, topAnimation]);
+    }, []);
 
     const backDropPressHandler = useCallback(() => {
       'worklet';
@@ -46,7 +47,7 @@ const BottomSheet = forwardRef(
         damping: 100,
         stiffness: 400,
       });
-    }, [height, topAnimation]);
+    }, []);
 
     useImperativeHandle(
       ref,
@@ -82,9 +83,15 @@ const BottomSheet = forwardRef(
       },
       onActive: (event, ctx) => {
         if (event.translationY < 0) {
-          topAnimation.value = newActiveHeight;
+          topAnimation.value = withSpring(newActiveHeight, {
+            damping: 100,
+            stiffness: 400,
+          });
         } else {
-          topAnimation.value = ctx.startX + event.translationY;
+          topAnimation.value = withSpring(ctx.startX + event.translationY, {
+            damping: 100,
+            stiffness: 400,
+          });
         }
       },
       onEnd: _ => {
