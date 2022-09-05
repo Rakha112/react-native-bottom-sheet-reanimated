@@ -5,12 +5,7 @@ import {
   useWindowDimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, {
-  useState,
-  forwardRef,
-  useImperativeHandle,
-  useCallback,
-} from 'react';
+import React, {forwardRef, useImperativeHandle, useCallback} from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -22,7 +17,7 @@ import {PanGestureHandler} from 'react-native-gesture-handler';
 const BottomSheet = forwardRef(
   ({activeHeight, children, backgroundColor, backDropColor}, ref) => {
     const {height} = useWindowDimensions();
-    const [newActiveHeight] = useState(height - activeHeight);
+    const newActiveHeight = height - activeHeight;
     const topAnimation = useSharedValue(height);
 
     const expand = useCallback(() => {
@@ -34,14 +29,6 @@ const BottomSheet = forwardRef(
     }, []);
 
     const close = useCallback(() => {
-      'worklet';
-      topAnimation.value = withSpring(height, {
-        damping: 100,
-        stiffness: 400,
-      });
-    }, []);
-
-    const backDropPressHandler = useCallback(() => {
       'worklet';
       topAnimation.value = withSpring(height, {
         damping: 100,
@@ -79,7 +66,7 @@ const BottomSheet = forwardRef(
 
     const gestureHandler = useAnimatedGestureHandler({
       onStart: (_, ctx) => {
-        ctx.startX = topAnimation.value;
+        ctx.startY = topAnimation.value;
       },
       onActive: (event, ctx) => {
         if (event.translationY < 0) {
@@ -88,7 +75,7 @@ const BottomSheet = forwardRef(
             stiffness: 400,
           });
         } else {
-          topAnimation.value = withSpring(ctx.startX + event.translationY, {
+          topAnimation.value = withSpring(ctx.startY + event.translationY, {
             damping: 100,
             stiffness: 400,
           });
@@ -113,7 +100,7 @@ const BottomSheet = forwardRef(
       <>
         <TouchableWithoutFeedback
           onPress={() => {
-            backDropPressHandler();
+            close();
           }}>
           <Animated.View
             style={[
